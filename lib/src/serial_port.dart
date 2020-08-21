@@ -57,6 +57,21 @@ class SerialPort {
     return closeResult;
   }
 
+  Future<void> setDouble(String slot) async {
+    return await _channel.invokeMethod(
+        'tcnCommand', jsonEncode({'command': 'setDouble', "data": slot}));
+  }
+
+  Future<void> setAllSingle() async {
+    return await _channel.invokeMethod(
+        'tcnCommand', jsonEncode({'command': 'allSingleSlot', "data": ''}));
+  }
+
+  Future<void> setSingle(String slot) async {
+    return await _channel.invokeMethod(
+        'tcnCommand', jsonEncode({'command': 'setSingle', "data": slot}));
+  }
+
   Future<void> getElevatorStatus() async {
     return await _channel.invokeMethod(
         'tcnCommand', jsonEncode({'command': 'statusElevator', "data": ''}));
