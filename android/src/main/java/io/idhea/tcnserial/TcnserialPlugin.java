@@ -396,7 +396,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           mOutputStream.write(bytesToSend, 0, 7);
 
           break;
-        case "to"://backElevatorToOrigin
+        case "backElevatorToOrigin"://backElevatorToOrigin
           bytesToSend = new byte[]{0x02, 0x03, 0x05,0x00, 0x00, 0x03, 0x05};
               mOutputStream.write(bytesToSend, 0, 7);
 
