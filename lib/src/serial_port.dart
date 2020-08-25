@@ -91,6 +91,16 @@ class SerialPort {
     return await _channel.invokeMethod('tcnCommand',
         jsonEncode({'command': 'backElevatorToOrigin', "data": ''}));
   }
+
+  Future<void> controlTemp() async {
+    return await _channel.invokeMethod(
+        'tcnCommand', jsonEncode({'command': 'controlTemp', "data": ''}));
+  }
+
+  Future<void> noControlTemp() async {
+    return await _channel.invokeMethod(
+        'tcnCommand', jsonEncode({'command': 'noControlTemp', "data": ''}));
+  }
 }
 
 class Device {
