@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad1fe6b9-71ff-4b39-a751-7912a2ddc7a6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/io/idhea/tcnserial/TcnserialPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/io/idhea/tcnserial/TcnserialPlugin.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,5 +65,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="463" y="108" key="FileChooserDialogImpl" timestamp="1598336241988">
+      <screen x="0" y="0" width="1366" height="707" />
+    </state>
+    <state x="463" y="108" key="FileChooserDialogImpl/0.0.1366.707@0.0.1366.707" timestamp="1598336241988" />
+    <state x="379" y="0" width="607" height="707" key="find.popup" timestamp="1598345541473">
+      <screen x="0" y="0" width="1366" height="707" />
+    </state>
+    <state x="379" y="0" width="607" height="707" key="find.popup/0.0.1366.707@0.0.1366.707" timestamp="1598345541473" />
   </component>
 </project>

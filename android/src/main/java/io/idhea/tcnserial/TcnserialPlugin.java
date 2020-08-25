@@ -150,6 +150,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
     try {
       byte[] bytesToSend;
       String command = (String) obj.get("command");
+      int data = 0;
       switch (command) {
         case "aaaaa1"://ok
           bytesToSend = new byte[]{0x00, (byte)0xFF ,0x01 ,(byte)0xFE ,0x55 ,(byte)0xAA};
@@ -349,12 +350,12 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
         break;
 
         case "statusElevator":
-          getStatusElevator();
+          getElevatorStatus();
         break;
         case "shipment":
 
 
-           data = Integer.parseInt((String) obj.get("data"));
+          data = Integer.parseInt((String) obj.get("data"));
           bytesToSend = new byte[]{0x02,0x06,0x02,0x00, (byte)(data),0x00,0x00,(byte) (byte)(data),0x03, 0x05};
           mOutputStream.write(bytesToSend, 0, 10);
           
@@ -366,7 +367,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           for (int i = (Integer.parseInt(range[0])); i <= (Integer.parseInt(range[1])); i++) {
             bytesToSend = new byte[]{0x02,0x06,0x02,0x00, (byte)(Integer.parseInt(range[2])),0x00,0x00,(byte) (byte)(Integer.parseInt(range[2])),0x03, (byte)i};
             mOutputStream.write(bytesToSend, 0, 10);
-            Thread.sleep(200);
+            // Thread.sleep(200);
           }
 
           break;
@@ -377,12 +378,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
 
           bytesToSend = new byte[]{0x02,0x06,0x02,0x00, (byte) slot3,0x00,0x00,(byte) adjust3,0x03, (byte)slot3};
           mOutputStream.write(bytesToSend, 0, 10);
-          Thread.sleep(200);
-
-
           break;
-
-
         case "cf"://clearElevatorFault
           /*bytesToSend = new byte[]{0x02,0x03,(byte) Integer.parseInt((String) obj.get("data")),0x00, 0x00, 0x03, 0x03};
           mOutputStream.write(bytesToSend, 0, 7);*/
@@ -398,13 +394,11 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
 
           bytesToSend = new byte[]{0x02, 0x03, 0x50, 0x00, 0x00, 0x03, (byte)82};
           mOutputStream.write(bytesToSend, 0, 7);
-          Thread.sleep(200);
 
           break;
         case "to"://backElevatorToOrigin
           bytesToSend = new byte[]{0x02, 0x03, 0x05,0x00, 0x00, 0x03, 0x05};
               mOutputStream.write(bytesToSend, 0, 7);
-            Thread.sleep(200);
 
           // for (int i = 0; i < 100; i++) {
           //   bytesToSend = new byte[]{0x02,0x03, 0x05,0x00, 0x00, 0x03, (byte)i};
