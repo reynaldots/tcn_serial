@@ -149,9 +149,10 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
   private void processTCNCommand(JSONObject obj) {
     try {
       byte[] bytesToSend;
+      int data = 0; //aqui vem o dado: SLOT ou TEMPERATURA
       String command = (String) obj.get("command");
-      int data = 0;
       switch (command) {
+
         case "aaaaa1"://ok
           bytesToSend = new byte[]{0x00, (byte)0xFF ,0x01 ,(byte)0xFE ,0x55 ,(byte)0xAA};
           mOutputStream.write(bytesToSend, 0, 6);
@@ -349,17 +350,35 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           mOutputStream.write(bytesToSend, 0, 6);
         break;
 
+        
+        case "driveBoardStatus":
+          bytesToSend = new byte[]{0x02 ,0x03 ,0x52,0x00 ,0x00,0x03 ,0x03 };
+          mOutputStream.write(bytesToSend, 0, 7);
+          break;
+
         case "statusElevator":
-          getElevatorStatus();
+          getStatusElevator();
         break;
         case "shipment":
 
 
-          data = Integer.parseInt((String) obj.get("data"));
+           data = Integer.parseInt((String) obj.get("data"));
           bytesToSend = new byte[]{0x02,0x06,0x02,0x00, (byte)(data),0x00,0x00,(byte) (byte)(data),0x03, 0x05};
           mOutputStream.write(bytesToSend, 0, 10);
           
           break;
+        case "t"://teste
+          String[] codes = ((String) obj.get("data")).split(",");
+          byte[] bytesToSend2 = new byte[codes.length];
+        
+          for (Integer i = 0; i < codes.length; i++) {            
+              String hex = Integer.toHexString(Integer.parseInt(codes[i]));
+              bytesToSend2[i] =        Byte.parseByte(hex,16);
+          }
+          // bytesToSend = new byte[]{0x02 ,0x03 ,0x52,0x00 ,0x00,0x03 ,0x03 };
+          mOutputStream.write(bytesToSend2, 0, codes.length);
+          break;
+
         case "d":
           String[] range = ((String) obj.get("data")).split("-");
 
@@ -367,7 +386,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           for (int i = (Integer.parseInt(range[0])); i <= (Integer.parseInt(range[1])); i++) {
             bytesToSend = new byte[]{0x02,0x06,0x02,0x00, (byte)(Integer.parseInt(range[2])),0x00,0x00,(byte) (byte)(Integer.parseInt(range[2])),0x03, (byte)i};
             mOutputStream.write(bytesToSend, 0, 10);
-            // Thread.sleep(200);
+            Thread.sleep(200);
           }
 
           break;
@@ -378,8 +397,13 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
 
           bytesToSend = new byte[]{0x02,0x06,0x02,0x00, (byte) slot3,0x00,0x00,(byte) adjust3,0x03, (byte)slot3};
           mOutputStream.write(bytesToSend, 0, 10);
+          Thread.sleep(200);
+
+
           break;
-        case "cf"://clearElevatorFault
+
+
+        case "clearElevatorFault"://clearElevatorFault
           /*bytesToSend = new byte[]{0x02,0x03,(byte) Integer.parseInt((String) obj.get("data")),0x00, 0x00, 0x03, 0x03};
           mOutputStream.write(bytesToSend, 0, 7);*/
 
@@ -394,11 +418,13 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
 
           bytesToSend = new byte[]{0x02, 0x03, 0x50, 0x00, 0x00, 0x03, (byte)82};
           mOutputStream.write(bytesToSend, 0, 7);
+          Thread.sleep(200);
 
           break;
         case "backElevatorToOrigin"://backElevatorToOrigin
           bytesToSend = new byte[]{0x02, 0x03, 0x05,0x00, 0x00, 0x03, 0x05};
               mOutputStream.write(bytesToSend, 0, 7);
+            Thread.sleep(200);
 
           // for (int i = 0; i < 100; i++) {
           //   bytesToSend = new byte[]{0x02,0x03, 0x05,0x00, 0x00, 0x03, (byte)i};
@@ -407,6 +433,34 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           // }
           break;
       }
+
+      /*
+      *
+A faixa de cálculo BCC inclui: STX + comprimento do pacote de comunicação + comando + pacote de dados + ETX
+* 2 + X + 2 + 3 = 7
+      * */
+
+      /*byte[] bytesToSend0 = {0x00, (byte) 0xFF, (byte) 0x83, (byte) 0xAC, 0x55, (byte) 0xAA};
+      mOutputStream.write(bytesToSend0, 0, 10);
+      Log.e(TAG, "Write data" + Arrays.toString(bytesToSend0));
+      Thread.sleep(1000);
+
+      byte[] bytesToSend = {0x02,0x06,0x02,0x00,0x05,0x00,0x00,0x01,0x03,0x05};
+      mOutputStream.write(bytesToSend, 0, 10);
+      Log.e(TAG, "Write data" + Arrays.toString(bytesToSend));*/
+/*
+      byte[] bytesToSend = {0x02,0x03,0x01,0x00,0x00,0x03,0x03};
+      Log.e(TAG, "Write data 1" + Arrays.toString(bytesToSend));
+      mOutputStream.write(bytesToSend, 0, 7);
+      Thread.sleep(1000);
+
+
+      byte[] bytesToSend2 = {0x02,0x06,0x02 ,0x00, 0x05 ,0x00 ,0x00 ,0x01, 0x03, 0x05};
+      Log.e(TAG, "Write data 2" + Arrays.toString(bytesToSend2));
+      mOutputStream.write(bytesToSend2, 0, 10);
+      Thread.sleep(1000);
+*/
+
     } catch (IOException e) {
       Log.e(TAG, e.toString());
     } catch (JSONException e) {
