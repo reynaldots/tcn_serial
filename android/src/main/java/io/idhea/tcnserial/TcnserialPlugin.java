@@ -357,7 +357,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           break;
 
         case "statusElevator":
-          getStatusElevator();
+          getElevatorStatus();
         break;
         case "shipment":
 
