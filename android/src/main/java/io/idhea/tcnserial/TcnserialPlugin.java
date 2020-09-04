@@ -131,11 +131,33 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           e.printStackTrace();
         }
         break;
+        case "exec_adb":
+          JSONObject obj = new JSONObject((String) call.arguments());
+          execAdb(obj.get("data"));
+          result.success(true);
+        break;
       default:
         result.notImplemented();
         break;
     }
   }
+
+  public static void execAdb(String command) throws IOException {
+    Process process = null;
+    String commandString;    
+
+    commandString = String.format("%s", "adb " + command);
+
+    System.out.print("Command is " + commandString + "\n");
+    try {
+        process = ProcessHelper.runTimeExec(commandString);
+    } catch (IOException e) {
+    }
+    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.print(line + "\n");
+    }
 
   private void getElevatorStatus() {
     byte[] bytesToSend = {0x02,0x03,0x01,0x00,0x00,0x03,0x03};
