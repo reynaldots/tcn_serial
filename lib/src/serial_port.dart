@@ -57,6 +57,23 @@ class SerialPort {
     return closeResult;
   }
 
+  Future<void> withoutElevatorDropWithoutSensor(String slot) async {
+    return await _channel.invokeMethod(
+        'tcnCommand',
+        jsonEncode(
+            {'command': 'withoutElevatorDropWithoutSensor', "data": slot}));
+  }
+
+  Future<void> withoutElevatorDropWithSensor(String slot) async {
+    return await _channel.invokeMethod('tcnCommand',
+        jsonEncode({'command': 'withoutElevatorDropWithSensor', "data": slot}));
+  }
+
+  Future<void> withoutElevatorTurnAll(String slot) async {
+    return await _channel.invokeMethod('tcnCommand',
+        jsonEncode({'command': 'withoutElevatorTurnAll', "data": ''}));
+  }
+
   Future<void> setDouble(String slot) async {
     return await _channel.invokeMethod(
         'tcnCommand', jsonEncode({'command': 'setDouble', "data": slot}));
