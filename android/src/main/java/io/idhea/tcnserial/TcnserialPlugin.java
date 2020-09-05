@@ -144,7 +144,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
     }
   }
 
-  public static void execAdb(String command) throws IOException {
+  public static void execAdb(String command) {
     Process process = null;
     String commandString;
 
