@@ -6,8 +6,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -131,7 +133,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           e.printStackTrace();
         }
         break;
-        case "execAdb":
+      case "execAdb":
           JSONObject obj = new JSONObject((String) call.arguments());
           execAdb(obj.get("data"));
           result.success(true);
@@ -144,22 +146,26 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
 
   public static void execAdb(String command) throws IOException {
     Process process = null;
-    String commandString;    
+    String commandString;
 
     commandString = String.format("%s", "adb " + command);
 
     System.out.print("Command is " + commandString + "\n");
     try {
-        process = ProcessHelper.runTimeExec(commandString);
-    } catch (IOException e) {
-    }
-    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-    String line;
-    while ((line = reader.readLine()) != null) {
-        System.out.print(line + "\n");
-    }
+      process = Runtime.getRuntime().exec(commandString);
 
-  private void getElevatorStatus() {
+      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        System.out.print(line + "\n");
+      }
+
+    } catch (IOException e) {
+      System.out.print("error execAdb" + e.getMessage());
+    }
+  }
+
+  private void getStatusElevator() {
     byte[] bytesToSend = {0x02,0x03,0x01,0x00,0x00,0x03,0x03};
     try {
       mOutputStream.write(bytesToSend, 0, 7);
