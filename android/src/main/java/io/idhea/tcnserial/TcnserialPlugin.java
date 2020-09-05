@@ -133,10 +133,10 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           e.printStackTrace();
         }
         break;
-      case "execAdb":
+      case "execCmd":
         try {
           JSONObject obj = new JSONObject((String) call.arguments());
-          execAdb((String) obj.get("data"));
+          execCmd((String) obj.get("data"));
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
@@ -149,11 +149,11 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
     }
   }
 
-  public static void execAdb(String command) {
+  public static void execCmd(String command) {
     Process process = null;
     String commandString;
 
-    commandString = String.format("%s", "adb " + command);
+    commandString = String.format("%s", command);
 
     System.out.print("Command is " + commandString + "\n");
     try {
@@ -166,7 +166,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
       }
 
     } catch (IOException e) {
-      System.out.print("error execAdb" + e.getMessage());
+      System.out.print("error execCmd" + e.getMessage());
     }
   }
 
