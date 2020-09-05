@@ -131,7 +131,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           e.printStackTrace();
         }
         break;
-        case "exec_adb":
+        case "execAdb":
           JSONObject obj = new JSONObject((String) call.arguments());
           execAdb(obj.get("data"));
           result.success(true);
