@@ -135,7 +135,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
         break;
       case "execAdb":
           JSONObject obj = new JSONObject((String) call.arguments());
-          execAdb(obj.get("data"));
+          execAdb((String) obj.get("data"));
           result.success(true);
         break;
       default:
