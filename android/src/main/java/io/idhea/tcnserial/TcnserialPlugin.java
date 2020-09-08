@@ -153,9 +153,10 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
   public static void execCmd(String...command) {
     String commandString;
 
-    commandString = String.format("%s", command);
+    //commandString = String.format("%s", command);
 
-    System.out.print("Command is " + commandString + "\n");
+    //System.out.print("Command is " + commandString + "\n");
+    System.out.print("Command \n");
 
 
     try{
