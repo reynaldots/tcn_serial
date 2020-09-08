@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -150,22 +151,33 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
   }
 
   public static void execCmd(String command) {
-    Process process = null;
     String commandString;
 
     commandString = String.format("%s", command);
 
     System.out.print("Command is " + commandString + "\n");
     try {
-      process = Runtime.getRuntime().exec(commandString);
+      Process su = Runtime.getRuntime().exec("su");
+      DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        System.out.print(line + "\n");
-      }
+      outputStream.writeBytes(commandString);
+      outputStream.flush();
+  
+      outputStream.writeBytes("exit\n");
+      outputStream.flush();
+      su.waitFor();
 
-    } catch (IOException e) {
+
+
+      // process = Runtime.getRuntime().exec(commandString);
+
+      // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+      // String line;
+      // while ((line = reader.readLine()) != null) {
+      //   System.out.print(line + "\n");
+      // }
+
+    } catch (IOException | InterruptedException e) {
       System.out.print("error execCmd" + e.getMessage());
     }
   }
