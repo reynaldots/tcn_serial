@@ -137,7 +137,11 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
       case "execCmd":
         try {
           JSONObject obj = new JSONObject((String) call.arguments());
-          execCmd((String) obj.get("data"));
+          String data = (String) obj.get("data");
+          String commandString = String.format("%s", data);
+          System.out.print("Command is " + commandString + "\n");
+          
+          execCmd(data);
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
@@ -151,12 +155,8 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
   }
 
   public static void execCmd(String...command) {
-    String commandString;
-
-    //commandString = String.format("%s", command);
-
-    //System.out.print("Command is " + commandString + "\n");
-    System.out.print("Command \n");
+    
+    // System.out.print("Command \n");
 
 
     try{
