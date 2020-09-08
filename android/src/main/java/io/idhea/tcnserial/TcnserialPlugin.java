@@ -150,36 +150,66 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
     }
   }
 
-  public static void execCmd(String command) {
+  public static void execCmd(String...command) {
     String commandString;
 
     commandString = String.format("%s", command);
 
     System.out.print("Command is " + commandString + "\n");
-    try {
+
+
+    try{
       Process su = Runtime.getRuntime().exec("su");
       DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
-      outputStream.writeBytes(commandString);
-      outputStream.flush();
-  
+      for (String s : command) {
+          outputStream.writeBytes(s+"\n");
+          outputStream.flush();
+      }
+
       outputStream.writeBytes("exit\n");
       outputStream.flush();
-      su.waitFor();
+      try {
+          su.waitFor();
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      }
+      outputStream.close();
+  }catch(IOException e){
+      e.printStackTrace();
+  }
 
 
 
-      // process = Runtime.getRuntime().exec(commandString);
 
-      // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-      // String line;
-      // while ((line = reader.readLine()) != null) {
-      //   System.out.print(line + "\n");
-      // }
+  //   try {
+  //     // Process su = Runtime.getRuntime().exec("su");
+  //     // DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
-    } catch (IOException | InterruptedException e) {
-      System.out.print("error execCmd" + e.getMessage());
-    }
+  //     // outputStream.writeBytes(commandString);
+  //     // outputStream.flush();
+  
+  //     // outputStream.writeBytes("exit\n");
+  //     // outputStream.flush();
+  //     // su.waitFor();
+
+
+
+  //     // process = Runtime.getRuntime().exec(commandString);
+
+  //     // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+  //     // String line;
+  //     // while ((line = reader.readLine()) != null) {
+  //     //   System.out.print(line + "\n");
+  //     // }
+
+
+
+      
+
+  //   } catch (IOException | InterruptedException e) {
+  //     System.out.print("error execCmd" + e.getMessage());
+  //   }
   }
 
   private void getStatusElevator() {
