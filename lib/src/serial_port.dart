@@ -89,9 +89,13 @@ class SerialPort {
         'tcnCommand', jsonEncode({'command': 'setSingle', "data": slot}));
   }
 
-  Future<void> getElevatorStatus() async {
-    await _channel.invokeMethod(
-        'tcnCommand', jsonEncode({'command': 'statusElevator', "data": ''}));
+  Future getElevatorStatus() async {
+    try {
+      await _channel.invokeMethod(
+          'tcnCommand', jsonEncode({'command': 'statusElevator', "data": ''}));
+    } on PlatformException catch (e) {
+      throw e;
+    }
   }
 
   Future shipment(String slot) async {
