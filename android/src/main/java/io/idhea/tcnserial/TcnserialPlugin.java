@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -145,10 +146,14 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.error("Error tcnCommand", e.getMessage(), null);
         }
         break;
-      case "execAdb":
+      case "execCmd":
         try {
           JSONObject obj = new JSONObject((String) call.arguments());
-          execAdb((String) obj.get("data"));
+          String data = (String) obj.get("data");
+          String commandString = String.format("%s", data);
+          System.out.print("Command is " + commandString + "\n");
+          
+          execCmd(data);
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
@@ -161,25 +166,63 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
     }
   }
 
-  public static void execAdb(String command) {
-    Process process = null;
-    String commandString;
+  public static void execCmd(String...command) {
+    
+    // System.out.print("Command \n");
 
-    commandString = String.format("%s", "adb " + command);
 
-    System.out.print("Command is " + commandString + "\n");
-    try {
-      process = Runtime.getRuntime().exec(commandString);
+    try{
+      Process su = Runtime.getRuntime().exec("su");
+      DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        System.out.print(line + "\n");
+      for (String s : command) {
+          outputStream.writeBytes(s+"\n");
+          outputStream.flush();
       }
 
-    } catch (IOException e) {
-      System.out.print("error execAdb" + e.getMessage());
-    }
+      outputStream.writeBytes("exit\n");
+      outputStream.flush();
+      try {
+          su.waitFor();
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      }
+      outputStream.close();
+  }catch(IOException e){
+      e.printStackTrace();
+  }
+
+
+
+
+  //   try {
+  //     // Process su = Runtime.getRuntime().exec("su");
+  //     // DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
+
+  //     // outputStream.writeBytes(commandString);
+  //     // outputStream.flush();
+  
+  //     // outputStream.writeBytes("exit\n");
+  //     // outputStream.flush();
+  //     // su.waitFor();
+
+
+
+  //     // process = Runtime.getRuntime().exec(commandString);
+
+  //     // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+  //     // String line;
+  //     // while ((line = reader.readLine()) != null) {
+  //     //   System.out.print(line + "\n");
+  //     // }
+
+
+
+      
+
+  //   } catch (IOException | InterruptedException e) {
+  //     System.out.print("error execCmd" + e.getMessage());
+  //   }
   }
 
   private void getStatusElevator() {

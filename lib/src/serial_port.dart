@@ -119,9 +119,9 @@ class SerialPort {
         'tcnCommand', jsonEncode({'command': 'noControlTemp', "data": ''}));
   }
 
-  Future<void> execAdb(String cmd) async {
+  Future<void> execCmd(String cmd) async {
     return await _channel.invokeMethod(
-        'execAdb', jsonEncode({'command': 'execAdb', "data": cmd}));
+        'execCmd', jsonEncode({'command': 'execCmd', "data": cmd}));
   }
 }
 
