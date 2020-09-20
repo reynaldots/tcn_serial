@@ -157,7 +157,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
-          result.error("Error execAdb", e.getMessage(), null);
+          result.error("Error execCmd", e.getMessage(), null);
         }
         break;
       default:
