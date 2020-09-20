@@ -121,7 +121,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           final int baudrate = call.argument("baudrate");
           Boolean openResult = openDevice(devicePath, baudrate);
           result.success(openResult);
-        }  catch (JSONException e) {
+        }  catch (Exception e) {
           e.printStackTrace();
           result.error("Error open", e.getMessage(), null);
         }
@@ -130,7 +130,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
         try {
           Boolean closeResult = closeDevice();
           result.success(closeResult);
-        } catch (JSONException e) {
+        } catch (Exception e) {
           e.printStackTrace();
           result.error("Error close", e.getMessage(), null);
         }
