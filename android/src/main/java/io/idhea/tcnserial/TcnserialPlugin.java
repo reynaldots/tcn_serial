@@ -115,15 +115,26 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
         result.success("Android " + android.os.Build.VERSION.RELEASE);
         break;
       case "open":
-        final String devicePath = call.argument("devicePath");
-        final int baudrate = call.argument("baudrate");
-        Boolean openResult = openDevice(devicePath, baudrate);
-        result.success(openResult);
+        try {
+          final String devicePath = call.argument("devicePath");
+          final int baudrate = call.argument("baudrate");
+          Boolean openResult = openDevice(devicePath, baudrate);
+          result.success(openResult);
+        }  catch (JSONException e) {
+          e.printStackTrace();
+          result.error("Error open", e.getMessage(), null);
+        }
         break;
       case "close":
-        Boolean closeResult = closeDevice();
-        result.success(closeResult);
+        try {
+          Boolean closeResult = closeDevice();
+          result.success(closeResult);
+        } catch (JSONException e) {
+          e.printStackTrace();
+          result.error("Error close", e.getMessage(), null);
+        }
         break;
+
       case "tcnCommand":
         try {
           JSONObject obj = new JSONObject((String) call.arguments());
@@ -131,6 +142,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
+          result.error("Error tcnCommand", e.getMessage(), null);
         }
         break;
       case "execAdb":
@@ -140,8 +152,8 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
+          result.error("Error execAdb", e.getMessage(), null);
         }
-
         break;
       default:
         result.notImplemented();
