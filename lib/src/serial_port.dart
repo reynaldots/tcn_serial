@@ -58,50 +58,58 @@ class SerialPort {
   }
 
   Future<void> withoutElevatorDropWithoutSensor(String slot) async {
-    return await _channel.invokeMethod(
+    await _channel.invokeMethod(
         'tcnCommand',
         jsonEncode(
             {'command': 'withoutElevatorDropWithoutSensor', "data": slot}));
   }
 
   Future<void> withoutElevatorDropWithSensor(String slot) async {
-    return await _channel.invokeMethod('tcnCommand',
+    await _channel.invokeMethod('tcnCommand',
         jsonEncode({'command': 'withoutElevatorDropWithSensor', "data": slot}));
   }
 
   Future<void> withoutElevatorTurnAll(String slot) async {
-    return await _channel.invokeMethod('tcnCommand',
+    await _channel.invokeMethod('tcnCommand',
         jsonEncode({'command': 'withoutElevatorTurnAll', "data": ''}));
   }
 
   Future<void> setDouble(String slot) async {
-    return await _channel.invokeMethod(
+    await _channel.invokeMethod(
         'tcnCommand', jsonEncode({'command': 'setDouble', "data": slot}));
   }
 
   Future<void> setAllSingle() async {
-    return await _channel.invokeMethod(
+    await _channel.invokeMethod(
         'tcnCommand', jsonEncode({'command': 'allSingleSlot', "data": ''}));
   }
 
   Future<void> setSingle(String slot) async {
-    return await _channel.invokeMethod(
+    await _channel.invokeMethod(
         'tcnCommand', jsonEncode({'command': 'setSingle', "data": slot}));
   }
 
   Future<void> getElevatorStatus() async {
-    return await _channel.invokeMethod(
+    await _channel.invokeMethod(
         'tcnCommand', jsonEncode({'command': 'statusElevator', "data": ''}));
   }
 
-  Future<void> shipment(String slot) async {
-    return await _channel.invokeMethod(
-        'tcnCommand', jsonEncode({'command': 'shipment', "data": slot}));
+  Future shipment(String slot) async {
+    try {
+      await _channel.invokeMethod(
+          'tcnCommand', jsonEncode({'command': 'shipment', "data": slot}));
+    } on PlatformException catch (e) {
+      throw e;
+    }
   }
 
-  Future<void> clearElevatorFault() async {
-    return await _channel.invokeMethod('tcnCommand',
-        jsonEncode({'command': 'clearElevatorFault', "data": ''}));
+  Future clearElevatorFault() async {
+    try {
+      await _channel.invokeMethod('tcnCommand',
+          jsonEncode({'command': 'clearElevatorFault', "data": ''}));
+    } on PlatformException catch (e) {
+      throw e;
+    }
   }
 
   Future<void> backElevatorToOrigin() async {
@@ -119,9 +127,13 @@ class SerialPort {
         'tcnCommand', jsonEncode({'command': 'noControlTemp', "data": ''}));
   }
 
-  Future<void> execCmd(String cmd) async {
-    return await _channel.invokeMethod(
-        'execCmd', jsonEncode({'command': 'execCmd', "data": cmd}));
+  Future execCmd(String cmd) async {
+    try {
+      await _channel.invokeMethod(
+          'execCmd', jsonEncode({'command': 'execCmd', "data": cmd}));
+    } on PlatformException catch (e) {
+      throw e;
+    }
   }
 }
 
