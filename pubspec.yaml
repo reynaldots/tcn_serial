@@ -1,7 +1,7 @@
 name: tcnserial
 description: A TCN Vending Machine Communication Flutter plugin.
-version: 0.0.15
-author:
+version: 1.1.0
+author: RTec Aplicativos
 homepage:
 
 environment:
