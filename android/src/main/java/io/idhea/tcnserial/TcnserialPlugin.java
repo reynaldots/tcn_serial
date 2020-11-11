@@ -469,16 +469,21 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           mOutputStream.write(bytesToSend, 0, 10);
           
           break;
-        case "t"://teste
-          String[] codes = ((String) obj.get("data")).split(",");
-          byte[] bytesToSend2 = new byte[codes.length];
+        case "t"://teste de conversão de comando
+
+          sendHex(((String) obj.get("data")));
+
+
+          // String[] codes = ((String) obj.get("data")).split(",");
+          // byte[] bytesToSend2 = new byte[codes.length];
         
-          for (Integer i = 0; i < codes.length; i++) {            
-              String hex = Integer.toHexString(Integer.parseInt(codes[i]));
-              bytesToSend2[i] =        Byte.parseByte(hex,16);
-          }
-          // bytesToSend = new byte[]{0x02 ,0x03 ,0x52,0x00 ,0x00,0x03 ,0x03 };
-          mOutputStream.write(bytesToSend2, 0, codes.length);
+          // for (Integer i = 0; i < codes.length; i++) {            
+          //     String hex = Integer.toHexString(Integer.parseInt(codes[i]));
+          //     bytesToSend2[i] =        Byte.parseByte(hex,16);
+          // }
+          // // bytesToSend = new byte[]{0x02 ,0x03 ,0x52,0x00 ,0x00,0x03 ,0x03 };
+          // mOutputStream.write(bytesToSend2, 0, codes.length);
+          
           break;
 
         case "d":
@@ -619,13 +624,23 @@ A faixa de cálculo BCC inclui: STX + comprimento do pacote de comunicação + c
       while (!isInterrupted()) {
         int size;
         try {
-          byte[] buffer = new byte[64];
-          if (mInputStream == null)
+          if (mInputStream == null) {
             return;
+          }
+          
+          byte[] buffer = new byte[512];
+          
           size = mInputStream.read(buffer);
           if (size > 0) {
             onDataReceived(buffer, size);
           }
+          try
+					{
+						Thread.sleep(50);//延时50ms
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
         } catch (IOException e) {
           e.printStackTrace();
           return;
@@ -648,6 +663,42 @@ A faixa de cálculo BCC inclui: STX + comprimento do pacote de comunicação + c
           hexChars[j * 2 + 1] = hexArray[v & 0x0F];
       }
       return new String(hexChars);
+  }
+
+  public void sendHex(String sHex) throws IOException {
+		byte[] bOutArray = HexToByteArr(sHex);
+		mOutputStream.write(bOutArray);
+  }
+  
+  static public byte[] HexToByteArr(String inHex)//hex字符串转字节数组
+  {
+      int hexlen = inHex.length();
+      byte[] result;
+      if (isOdd(hexlen)==1)
+      {//奇数
+          hexlen++;
+          result = new byte[(hexlen/2)];
+          inHex="0"+inHex;
+      }else {//偶数
+          result = new byte[(hexlen/2)];
+      }
+      int j=0;
+      for (int i = 0; i < hexlen; i+=2)
+      {
+          result[j]=HexToByte(inHex.substring(i,i+2));
+          j++;
+      }
+      return result;
+  }
+
+  static public int isOdd(int num)
+  {
+    return num & 0x1;
+  }
+
+  static public byte HexToByte(String inHex)//Hex字符串转byte
+  {
+    return (byte)Integer.parseInt(inHex,16);
   }
 
   private void invokeMethodUIThread(final String name, final String result) {
