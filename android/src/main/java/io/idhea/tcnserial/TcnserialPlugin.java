@@ -329,14 +329,34 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           break;
 
 
-        case "statusDoor"://ok
+        case "statusDoor":
         bytesToSend = new byte[]{0x00, (byte)0xFF,(byte) 0xDF ,0x20 ,0x55 ,(byte)0xAA};
         mOutputStream.write(bytesToSend, 0, 6);
         break;
 
-        case "closeDoor"://ok
-        bytesToSend = new byte[]{0x02, (byte)0x04,(byte) 0xDF ,0x20 ,0x55 ,(byte)0xAA};
-        mOutputStream.write(bytesToSend, 0, 6);
+        // case "closeDoor"://ok - antigo, responde ok mas n funciona na com elevador
+        // bytesToSend = new byte[]{0x02, (byte)0x04,(byte) 0xDF ,0x20 ,0x55 ,(byte)0xAA};
+        // mOutputStream.write(bytesToSend, 0, 6);
+        // break;
+
+        case "openDoor":
+        bytesToSend = new byte[]{0x02, 0x04, 0x03, 0x00, 0x01, 0x01, 0x03, 0x06};
+        mOutputStream.write(bytesToSend, 0, 8);
+        break;
+
+        case "closeDoor":
+        bytesToSend = new byte[]{0x02, 0x04, 0x03, 0x00, 0x02, 0x02, 0x03, 0x06};
+        mOutputStream.write(bytesToSend, 0, 8);
+        break;
+        
+        case "openDiafragma":
+        bytesToSend = new byte[]{0x02, 0x04, 0x06, 0x00, 0x00, 0x00, 0x03, 0x03};
+        mOutputStream.write(bytesToSend, 0, 8);
+        break;
+
+        case "closeDiafragma":
+        bytesToSend = new byte[]{0x02, 0x04, 0x06, 0x00, 0x01, 0x01, 0x03, 0x06};
+        mOutputStream.write(bytesToSend, 0, 8);
         break;
 
 
@@ -358,8 +378,6 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           bytesToSend = new byte[]{0x00 ,(byte)0xFF ,(byte)0xDE, 0x21, 0x55 ,(byte)0xAA};
           mOutputStream.write(bytesToSend, 0, 6);
           break;
-
-
 
         case "glassHeatingOn"://???
           bytesToSend = new byte[]{0x00, (byte)0xFF ,(byte)0xD4,0x2B ,0x01,(byte) 0xFE};
@@ -469,7 +487,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           mOutputStream.write(bytesToSend, 0, 10);
           
           break;
-        case "t"://teste de conversão de comando
+        case "sendHex"://teste de conversão de comando
 
           sendHex(((String) obj.get("data")));
 
@@ -529,8 +547,8 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
 
           break;
         case "backElevatorToOrigin"://backElevatorToOrigin
-          bytesToSend = new byte[]{0x02, 0x03, 0x05,0x00, 0x00, 0x03, 0x05};
-              mOutputStream.write(bytesToSend, 0, 7);
+          bytesToSend = new byte[]{0x02, 0x03, 0x05, 0x00, 0x00, 0x03, 0x07};
+          mOutputStream.write(bytesToSend, 0, 7);
             // Thread.sleep(200);
 
           // for (int i = 0; i < 100; i++) {
