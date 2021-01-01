@@ -139,6 +139,15 @@ class SerialPort {
       throw e;
     }
   }
+
+  Future<void> sendHex(String cmd) async {
+    try {
+      await _channel.invokeMethod(
+          'execCmd', jsonEncode({'command': 'sendHex', "data": cmd}));
+    } on PlatformException catch (e) {
+      throw e;
+    }
+  }
 }
 
 class Device {
