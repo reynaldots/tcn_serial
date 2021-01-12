@@ -37,6 +37,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
+import java.io.FileWriter;   // Import the FileWriter class
 
 /** TcnserialPlugin */
 public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, RequestPermissionsResultListener, EventChannel.StreamHandler {
@@ -160,6 +161,29 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.error("Error execCmd", e.getMessage(), null);
         }
         break;
+        case "sendHex"://teste de conversão de comando
+          try{
+            JSONObject obj = new JSONObject((String) call.arguments());
+            sendHex(((String) obj.get("data")));
+          }
+          catch (Exception e){
+            e.printStackTrace();
+            result.error("Error execCmd", e.getMessage(), null);
+        }
+          
+
+
+          // String[] codes = ((String) obj.get("data")).split(",");
+          // byte[] bytesToSend2 = new byte[codes.length];
+        
+          // for (Integer i = 0; i < codes.length; i++) {            
+          //     String hex = Integer.toHexString(Integer.parseInt(codes[i]));
+          //     bytesToSend2[i] =        Byte.parseByte(hex,16);
+          // }
+          // // bytesToSend = new byte[]{0x02 ,0x03 ,0x52,0x00 ,0x00,0x03 ,0x03 };
+          // mOutputStream.write(bytesToSend2, 0, codes.length);
+          
+          break;
       default:
         result.notImplemented();
         break;
@@ -487,22 +511,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           mOutputStream.write(bytesToSend, 0, 10);
           
           break;
-        case "sendHex"://teste de conversão de comando
-
-          sendHex(((String) obj.get("data")));
-
-
-          // String[] codes = ((String) obj.get("data")).split(",");
-          // byte[] bytesToSend2 = new byte[codes.length];
         
-          // for (Integer i = 0; i < codes.length; i++) {            
-          //     String hex = Integer.toHexString(Integer.parseInt(codes[i]));
-          //     bytesToSend2[i] =        Byte.parseByte(hex,16);
-          // }
-          // // bytesToSend = new byte[]{0x02 ,0x03 ,0x52,0x00 ,0x00,0x03 ,0x03 };
-          // mOutputStream.write(bytesToSend2, 0, codes.length);
-          
-          break;
 
         case "d":
           String[] range = ((String) obj.get("data")).split("-");
@@ -684,8 +693,45 @@ A faixa de cálculo BCC inclui: STX + comprimento do pacote de comunicação + c
   }
 
   public void sendHex(String sHex) throws IOException {
-		byte[] bOutArray = HexToByteArr(sHex);
-		mOutputStream.write(bOutArray);
+    try{
+      byte[] bOutArray = HexToByteArr(sHex);
+      mOutputStream.write(bOutArray);
+
+    }catch (Exception e){
+/*
+      try {
+        var fileName = "erros.txt";
+
+        FileWriter myWriter = new FileWriter(fileName);
+        myWriter.write(e.ToString());
+        myWriter.close();
+
+
+        // Determine where to save your file
+        var downloadDirectory = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, Android.OS.Environment.DirectoryDownloads);
+        var filePath = Path.Combine(downloadDirectory, fileName);
+
+        // Create and save your file to the Android device
+        var streamWriter = File.Create(filePath);
+        streamWriter.Close();
+        File.WriteAllBytes(filePath, file);
+
+
+        
+
+        File dir = new File("//sdcard//Download//");
+
+        FileWriter myWriter = new FileWriter("erros.txt");
+        myWriter.write(e.ToString());
+        myWriter.close();
+        //System.out.println("Successfully wrote to the file.");
+      } catch (Exception e) {
+        System.out.println("An error occurred.");
+        e.printStackTrace();
+      }
+*/
+     throw e;
+    }
   }
   
   static public byte[] HexToByteArr(String inHex)//hex字符串转字节数组

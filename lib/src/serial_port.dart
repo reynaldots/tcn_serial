@@ -1,16 +1,6 @@
 part of tcn_serial;
 
 class SerialPort {
-  MethodChannel _channel;
-  EventChannel _eventChannel;
-  Device device;
-  int baudrate;
-  bool _deviceConnected;
-
-  BehaviorSubject<String> _dataSerialBS =
-      new BehaviorSubject<String>.seeded(null);
-  Stream<String> get dataSerial => _dataSerialBS.stream;
-
   SerialPort(MethodChannel channel, EventChannel eventChannel, Device device,
       int baudrate) {
     this.device = device;
@@ -27,12 +17,24 @@ class SerialPort {
     });
   }
 
-  bool get isConnected => _deviceConnected;
+  int baudrate;
+  Device device;
+
+  MethodChannel _channel;
+  BehaviorSubject<String> _dataSerialBS =
+      new BehaviorSubject<String>.seeded(null);
+
+  bool _deviceConnected;
+  EventChannel _eventChannel;
 
   @override
   String toString() {
     return "SerialPort($device, $baudrate)";
   }
+
+  Stream<String> get dataSerial => _dataSerialBS.stream;
+
+  bool get isConnected => _deviceConnected;
 
   /// Open device
   Future<bool> open() async {
@@ -142,8 +144,7 @@ class SerialPort {
 
   Future<void> sendHex(String cmd) async {
     try {
-      await _channel.invokeMethod(
-          'execCmd', jsonEncode({'command': 'sendHex', "data": cmd}));
+      await _channel.invokeMethod('sendHex', jsonEncode({"data": cmd}));
     } on PlatformException catch (e) {
       throw e;
     }
@@ -151,10 +152,10 @@ class SerialPort {
 }
 
 class Device {
+  Device(this.name, this.path);
+
   String name;
   String path;
-
-  Device(this.name, this.path);
 
   @override
   String toString() {
