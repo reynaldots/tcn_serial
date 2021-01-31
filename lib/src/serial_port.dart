@@ -135,16 +135,16 @@ class SerialPort {
 
   Future execCmd(String cmd) async {
     try {
-      await _channel.invokeMethod(
+      return await _channel.invokeMethod(
           'execCmd', jsonEncode({'command': 'execCmd', "data": cmd}));
     } on PlatformException catch (e) {
       throw e;
     }
   }
 
-  Future<void> sendHex(String cmd) async {
+  Future sendHex(String cmd) async {
     try {
-      await _channel.invokeMethod('sendHex', jsonEncode({"data": cmd}));
+      return await _channel.invokeMethod('sendHex', jsonEncode({"data": cmd}));
     } on PlatformException catch (e) {
       throw e;
     }

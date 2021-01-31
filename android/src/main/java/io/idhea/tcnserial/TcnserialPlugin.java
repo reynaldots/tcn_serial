@@ -165,6 +165,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           try{
             JSONObject obj = new JSONObject((String) call.arguments());
             sendHex(((String) obj.get("data")));
+            result.success(true);
           }
           catch (Exception e){
             e.printStackTrace();
