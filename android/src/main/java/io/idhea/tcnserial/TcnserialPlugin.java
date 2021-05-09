@@ -124,7 +124,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.success(openResult);
         }  catch (Exception e) {
           e.printStackTrace();
-          result.error("Error open", e.getMessage(), null);
+          result.error("TCNSerial Error open", e.getMessage(), null);
         }
         break;
       case "close":
@@ -133,7 +133,7 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           result.success(closeResult);
         } catch (Exception e) {
           e.printStackTrace();
-          result.error("Error close", e.getMessage(), null);
+          result.error("TCNSerial Error close", e.getMessage(), null);
         }
         break;
 
@@ -152,24 +152,26 @@ public class TcnserialPlugin implements FlutterPlugin, ActivityAware, MethodCall
           JSONObject obj = new JSONObject((String) call.arguments());
           String data = (String) obj.get("data");
           String commandString = String.format("%s", data);
-          System.out.print("Command is " + commandString + "\n");
+          System.out.print("TCNSerial Command is " + commandString + "\n");
           
           execCmd(data);
           result.success(true);
         } catch (JSONException e) {
           e.printStackTrace();
-          result.error("Error execCmd", e.getMessage(), null);
+          result.error("TCNSerial Error execCmd", e.getMessage(), null);
         }
         break;
         case "sendHex"://teste de conversão de comando
           try{
             JSONObject obj = new JSONObject((String) call.arguments());
+            System.out.print("TCNSerial sendHex " + ((String) obj.get("data")) + "\n");
             sendHex(((String) obj.get("data")));
+            System.out.print("TCNSerial sendHex ok\n");
             result.success(true);
           }
           catch (Exception e){
             e.printStackTrace();
-            result.error("Error execCmd", e.getMessage(), null);
+            result.error("TCNSerial Error execCmd", e.getMessage(), null);
         }
           
 
@@ -659,18 +661,20 @@ A faixa de cálculo BCC inclui: STX + comprimento do pacote de comunicação + c
           byte[] buffer = new byte[512];
           
           size = mInputStream.read(buffer);
-          if (size > 0) {
-            onDataReceived(buffer, size);
-          }
           try
-					{
-						Thread.sleep(50);//延时50ms
+          {
+            Thread.sleep(50);//延时50ms// não pode ficar muito baixo pois pode gerar problemas no app
+            if (size > 0) {
+              onDataReceived(buffer, size);
+            }
 					} catch (InterruptedException e)
 					{
+            System.out.print("TCNSerial InterruptedException " + e.getStackTrace() + "\n");
 						e.printStackTrace();
 					}
         } catch (IOException e) {
-          e.printStackTrace();
+            System.out.print("TCNSerial IOException " + e.getStackTrace() + "\n");
+            e.printStackTrace();
           return;
         }
       }
