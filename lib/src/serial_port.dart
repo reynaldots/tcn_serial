@@ -21,8 +21,8 @@ class SerialPort {
   Device device;
 
   MethodChannel _channel;
-  BehaviorSubject<String> _dataSerialBS =
-      new BehaviorSubject<String>.seeded(null);
+  StreamController<String> _dataSerialBS =
+      new StreamController<String>.broadcast();
 
   bool _deviceConnected;
   EventChannel _eventChannel;
